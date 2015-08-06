@@ -1,15 +1,74 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
-  </head>
-  <body class="mixpanel-platform-body">
-    <h1>Hello, World!</h1>
-    <script>
-      // Run queries and display results here
-    </script>
-  </body>
+    <script src="./ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+
+        h1 {
+            font-size: 24px;
+            margin: 10px 0 20px;
+        }
+
+        #wrapper {
+            display: inline-block;
+        }
+
+        #editor {
+            min-height: 100px; 
+            width: 600px;
+        }
+
+        #run_button {
+            float: right;
+            padding: 6px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body class="mixpanel-platform-body">
+
+<div id="wrapper">
+<h1>Custom Query console</h1>
+
+<div id="editor">var result = {};
+
+var scan = function(event, user) {
+    result[event.name] = result[event.name] || 0;
+    result[event.name]++;
+};
+</div>
+
+<div id="controls">
+    <button id="run_button">Run query</button>
+</div>
+
+<div id="output">
+</div>
+</div>
+
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.setOptions({
+        maxLines: 40
+    });
+
+    $("#run_button").on('click', function() {
+        console.log(editor.getValue());
+        MP.api.query("api/2.0/custom_query", {"from_date": "2015-06-01", "to_date": "2015-06-30", "script": editor.getValue()}, function(resp) {
+            if (resp.status == "ok") {
+            } else {
+            }
+            console.log(resp);
+        });
+    });
+</script>
+</body>
 </html>
