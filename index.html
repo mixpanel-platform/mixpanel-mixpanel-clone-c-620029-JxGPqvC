@@ -86,7 +86,7 @@ var scan = function(event, user) {
             );
         };
 
-        MP.api.query("http://tim.dev.mixpanel.org/api/2.0/custom_query", params)
+        MP.api.query("/api/2.0/custom_query", params)
             .done(function(resp) {
                 console.log(resp);
                 //debugger
