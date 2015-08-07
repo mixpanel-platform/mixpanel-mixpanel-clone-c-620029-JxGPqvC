@@ -13,13 +13,14 @@
             margin: 10px 0 20px;
         }
 
-        #wrapper {
+        #editor_wrapper {
             display: inline-block;
         }
 
         #editor {
             min-height: 100px; 
             width: 600px;
+            padding: 10px;
         }
 
         #run_button {
@@ -28,28 +29,40 @@
             margin: 10px 0;
             font-size: 14px;
         }
+
+        #output {
+            font-family: monospace;
+            white-space: pre;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border: 1px solid #333;
+
+            min-width: 600px;
+            display: inline-block;
+        }
     </style>
 </head>
 
 <body class="mixpanel-platform-body">
 
-<div id="wrapper">
+<div id="editor_wrapper">
 <h1>Custom Query console</h1>
 
-<div id="editor">var result = {};
+    <div id="editor">var result = {};
 
 var scan = function(event, user) {
     result[event.name] = result[event.name] || 0;
     result[event.name]++;
 };
-</div>
+</div> <!-- weird formatting required for default code to look good -->
 
-<div id="controls">
-    <button id="run_button">Run query</button>
+    <div id="controls">
+        <button id="run_button">Run query</button>
+    </div>
 </div>
 
 <div id="output">
-</div>
+    Output:
 </div>
 
 <script>
@@ -62,12 +75,33 @@ var scan = function(event, user) {
 
     $("#run_button").on('click', function() {
         console.log(editor.getValue());
-        MP.api.query("api/2.0/custom_query", {"from_date": "2015-06-01", "to_date": "2015-06-30", "script": editor.getValue()}, function(resp) {
-            if (resp.status == "ok") {
-            } else {
-            }
-            console.log(resp);
-        });
+        var params = {
+            "from_date": "2015-06-01",
+            "to_date": "2015-06-30",
+            "script": editor.getValue()
+        };
+        var set_output = function(formatted) {
+            $("#output").html(
+                $("<pre>").html(formatted)
+            );
+        };
+
+        MP.api.query("http://tim.dev.mixpanel.org/api/2.0/custom_query", params)
+            .done(function(resp) {
+                console.log(resp);
+                //debugger
+                var stringified = JSON.stringify(resp.results, undefined, 2);
+                set_output(stringified);
+            })
+            .fail(function($xhr) {
+                // linter errors come as text
+                var error = $xhr.request.responseJSON.error;
+                try {
+                    // runtime errors come as a json blob
+                    error = JSON.parse(error).error;
+                } catch (err) {}
+                set_output(error);
+            });
     });
 </script>
 </body>
