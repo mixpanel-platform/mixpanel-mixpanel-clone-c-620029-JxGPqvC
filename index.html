@@ -13,14 +13,17 @@
             margin: 10px 0 20px;
         }
 
+        #wrapper {
+            display:inline-block;
+        }
+
         #editor_wrapper {
             display: inline-block;
         }
 
         #editor {
             min-height: 100px; 
-            width: 600px;
-            padding: 10px;
+            width: 934px;
         }
 
         #run_button {
@@ -37,14 +40,22 @@
             padding: 10px;
             border: 1px solid #333;
 
-            min-width: 600px;
+            min-width: 912px;
             display: inline-block;
+            visibility: hidden;
         }
+
+        #output .spinner_wrapper {
+            text-align: center;
+            padding: 20px 0
+        }
+
     </style>
 </head>
 
 <body class="mixpanel-platform-body">
 
+<div id="wrapper">
 <div id="editor_wrapper">
 <h1>Custom Query console</h1>
 
@@ -61,8 +72,10 @@ var scan = function(event, user) {
     </div>
 </div>
 
-<div id="output">
-    Output:
+<br />
+
+<div id="output"></div>
+</div>
 </div>
 
 <script>
@@ -74,7 +87,14 @@ var scan = function(event, user) {
     });
 
     $("#run_button").on('click', function() {
-        console.log(editor.getValue());
+
+        $("#output").html(
+            $("<div class='spinner_wrapper'>").append(
+                $("<img src='./ajax-loader-big.gif' />")
+            )
+        );
+        $("#output").css('visibility', 'visible');
+
         var params = {
             "from_date": "2015-06-01",
             "to_date": "2015-06-30",
@@ -88,8 +108,6 @@ var scan = function(event, user) {
 
         MP.api.query("/api/2.0/custom_query", params)
             .done(function(resp) {
-                console.log(resp);
-                //debugger
                 var stringified = JSON.stringify(resp.results, undefined, 2);
                 set_output(stringified);
             })
