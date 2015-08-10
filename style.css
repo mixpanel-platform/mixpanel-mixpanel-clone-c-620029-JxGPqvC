@@ -9,12 +9,13 @@ h1 {
 }
 
 #docs {
-    float: right;
+    float: left;
+    line-height: 28px;
 }
 
 #report_selector_menu {
     float: right;
-    margin: 10px 0;
+    margin-bottom: 10px;
 }
 
 #reports_dropdown {
