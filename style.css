@@ -1,3 +1,8 @@
+body {
+    width: 945px;
+    font-size: 14px !important;
+}
+
 h1 {
     font-size: 24px;
     margin: 10px 0 20px;
@@ -7,17 +12,18 @@ h1 {
     float: right;
 }
 
-#wrapper {
-    display:inline-block;
+#report_selector_menu {
+    float: right;
+    margin: 10px 0;
 }
 
-#editor_wrapper {
+#reports_dropdown {
     display: inline-block;
 }
 
 #editor {
     min-height: 100px; 
-    width: 934px;
+    width: 100%;
 }
 
 #params_table {
@@ -33,6 +39,7 @@ h1 {
 #params_table th {
     height: 38px;
     line-height: 38px;
+    font-weight: normal;
 }
 
 #script_params {
@@ -41,9 +48,9 @@ h1 {
 
 #run_button {
     float: right;
-    padding: 6px;
+    padding: 10px;
     margin: 10px 0;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 #output {
@@ -52,9 +59,6 @@ h1 {
     background-color: #f5f5f5;
     padding: 10px;
     border: 1px solid #333;
-
-    min-width: 912px;
-    display: inline-block;
     visibility: hidden;
 }
 
@@ -74,13 +78,12 @@ h1 {
 #script_params {
     display: block;
     box-sizing: border-box;
-    width: 220px;
+    min-width: 220px;
     min-height: 34px;
     font-size: 13px;
     color: #000;
     border: 1px solid #bdc7d2;
     border-radius: 3px;
-    width: 100%;
     padding: 8px 10px 7px;
     color: #5c617b;
     background-color: #f6f7f8;
