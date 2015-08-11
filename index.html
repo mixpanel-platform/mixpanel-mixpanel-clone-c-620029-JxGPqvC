@@ -48,6 +48,7 @@
 <br />
 
 <div id="output"></div>
+<div class="chart"></div>
 </div>
 </div>
 
@@ -129,6 +130,7 @@
                 .done(function(resp) {
                     var stringified = JSON.stringify(resp.results, undefined, 2);
                     set_output(stringified);
+                    $(".chart").MPChart({data: resp.results, chartType: 'line'});
                 })
                 .fail(function($xhr) {
                     // linter errors come as text
