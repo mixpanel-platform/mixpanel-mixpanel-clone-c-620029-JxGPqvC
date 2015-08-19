@@ -146,7 +146,7 @@
 <script type="text/cq" id="default_query">
 var result = {};
 
-var scan = function(event, user) {
+var processEvent = function(event, user) {
     // Count up all events that start with a certain letter
     if (event.name.toLowerCase().startsWith(params.first_letter.toLowerCase())) {
         result[event.name] = result[event.name] || 0;
@@ -161,7 +161,7 @@ var scan = function(event, user) {
 <script type="text/cq" id="flow_query">
 var result = {};
 
-var scan = function(event, user) {
+var processEvent = function(event, user) {
     // user only exists if there is a distinct id on the event
     if (user) {
         user.state = user.state || { events: [] };
@@ -176,7 +176,7 @@ var scan = function(event, user) {
     }
 };
 
-var analyze = function(user) {
+var processUser = function(user) {
     var r = result;
     for (var i = 0; i < user.state.events.length; i++) {
         var e = user.state.events[i];
@@ -218,7 +218,7 @@ var MONTH = 30 * DAY;
 
 var result = {};
 
-var scan = function(event, user) {
+var processEvent = function(event, user) {
     if (user) {
         user.state = user.state || { steps: [] };
         for (var i = 0; i < params.steps.length; i++) {
@@ -239,7 +239,7 @@ var scan = function(event, user) {
     }
 };
 
-var analyze = function(user) {
+var processUser = function(user) {
     if (user.state.steps.length) {
         var day = _to_date_string(user.state.steps[0]);
         result[day] = result[day] || _initialize_result_for_day();
