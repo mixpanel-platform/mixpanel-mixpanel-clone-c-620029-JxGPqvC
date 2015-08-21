@@ -176,29 +176,31 @@ var processEvent = function(event, user) {
 };
 
 var processUser = function(user) {
-    var r = result;
-    for (var i = 0; i < user.state.events.length; i++) {
-        var e = user.state.events[i];
+    if (user.state) {
+        var r = result;
+        for (var i = 0; i < user.state.events.length; i++) {
+            var e = user.state.events[i];
 
-        if (i > 0 && e.time > (user.state.events[i - 1].time + 30 * 60)) { // 30 mins have passed
-            // skip ahead to next instance of `first_event`
-            while (1) {
-                if (e.name == params.first_event) {
-                    break;
+            if (i > 0 && e.time > (user.state.events[i - 1].time + 30 * 60)) { // 30 mins have passed
+                // skip ahead to next instance of `first_event`
+                while (1) {
+                    if (e.name == params.first_event) {
+                        break;
+                    }
+                    ++i;
+                    if (i == user.state.events.length) {
+                        // reached the end of the events list without finding the event again
+                        return;
+                    }
+                    e = user.state.events[i];
+                    r = result;
                 }
-                ++i;
-                if (i == user.state.events.length) {
-                    // reached the end of the events list without finding the event again
-                    return;
-                }
-                e = user.state.events[i];
-                r = result;
             }
-        }
 
-        r[e.name] = r[e.name] || {'count': 0, 'next': {}};
-        r[e.name].count++;
-        r = r[e.name].next;
+            r[e.name] = r[e.name] || {'count': 0, 'next': {}};
+            r[e.name].count++;
+            r = r[e.name].next;
+        }
     }
 };
 </script>
@@ -239,7 +241,7 @@ var processEvent = function(event, user) {
 };
 
 var processUser = function(user) {
-    if (user.state.steps.length) {
+    if (user.state && user.state.steps.length) {
         var day = _to_date_string(user.state.steps[0]);
         result[day] = result[day] || _initialize_result_for_day();
         for (var i = 0; i < user.state.steps.length; i++) {
